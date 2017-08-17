@@ -7,8 +7,8 @@
 GIT_OWNER_NAME=$(git config user.name| tr '[:upper:]' '[:lower:]')
 BASH_OWNER_NAME=$(id -u -n)
 OWNER_NAME=${GIT_OWNER_NAME:-BASH_OWNER_NAME}
-CONTAINER_NAME=${CONTAINER_NAME:-c-unbound-docker}
-IMAGES_NAME=${IMAGES_NAME:-i-unbound-docker}
+CONTAINER_NAME=${CONTAINER_NAME:-c-docker-unbound}
+IMAGES_NAME=${IMAGES_NAME:-i-docker-unbound}
 TAG_NAME=${TAG_NAME:-latest}
 
 if  docker images ${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME} | grep -q ${OWNER_NAME}/${IMAGES_NAME}; then
