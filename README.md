@@ -10,8 +10,8 @@
 - Fast internet
 
 # Usage 
-- ``` git clone https://github.com/MathiasStadler/docker-unbound.git
-- ``` ./run.sh ```
+- ```git clone https://github.com/MathiasStadler/docker-unbound.git```
+- ```./run.sh```
 
 # Used own A or PTR record 
 - Please edit the a-record.conf in the root directory of the project
