@@ -59,9 +59,9 @@ checkImagesAndBuildNewIfNecessary() {
   fi
 
   if  docker images ${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME} | grep -q ${OWNER_NAME}/${IMAGES_NAME}; then
-    echo "Iamges ${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME} exists...OK"
+    echo "Images ${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME} exists...OK"
   else
-    echo "Iamges ${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME} doesn't exist"
+    echo "Images ${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME} doesn't exist"
     read -r -p "Would you like build this images now ? [y/N]" response
       case "$response" in [yY][eE][sS]|[yY]) 
         echo "start build images ${OWNER_NAME}/${IMAGES_NAME} " 
@@ -90,7 +90,7 @@ echo "Check old container availble .."
 
 if docker ps -a| grep ${CONTAINER_NAME}; then
   echo "$(docker ps -a| grep ${CONTAINER_NAME}|wc -l ) ${CONTAINER_NAME} container found"
-  echo "we delete the container now ... "
+  echo "We delete the container now ... "
     docker ps -a| grep ${CONTAINER_NAME} | awk '{print $1}' | xargs --no-run-if-empty docker rm
       if docker ps -a| grep ${CONTAINER_NAME}; then
         echo " Error we could't delete the container ${CONTAINER_NAME} ...Not OK"
@@ -110,6 +110,7 @@ runContainer() {
   #start container
     CID=$(docker run --name ${CONTAINER_NAME}  -d -p 53:53/udp \
     -v $(pwd)/a-records.conf:/opt/unbound/etc/unbound/a-records.conf:ro \
+    -v $(pwd)/root-hints:/opt/unbound/etc/unbound/root.hints:ro \
     ${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME} )
 
     #give docker few seconds
@@ -152,8 +153,8 @@ terminated () {
 run(){
 echo "... run "
 checkRunningContainerAndStop
-checkImagesAndBuildNewIfNecessary
 deleteOldContainerAndDelete
+checkImagesAndBuildNewIfNecessary
 runContainer
 
 # Run at console, kill cleanly if ctrl-c is hit
