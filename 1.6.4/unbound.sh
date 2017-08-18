@@ -22,7 +22,7 @@ sed \
     -e "s/@THREADS@/${threads}/" \
     > /opt/unbound/etc/unbound/unbound.conf << EOT
 server:
-  verbosity: 1
+  verbosity: 5
   num-threads: @THREADS@
   interface: 0.0.0.0@53
   so-reuseport: yes
@@ -33,7 +33,7 @@ server:
   do-daemonize: no
   username: "_unbound"
   log-queries: no
-  logfile: /var/log/unbound
+  logfile: /opt/unbound/etc/unbound/unbound.log
   hide-version: no
   identity: "docker-unbound"
   harden-short-bufsize: yes
@@ -76,4 +76,8 @@ mkdir -p -m 700 /opt/unbound/etc/unbound/var && \
 chown _unbound:_unbound /opt/unbound/etc/unbound/var && \
 /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/var/root.key
 
-exec /opt/unbound/sbin/unbound -d -c /opt/unbound/etc/unbound/unbound.conf
+#old exec /opt/unbound/sbin/unbound -d -c /opt/unbound/etc/unbound/unbound.conf
+
+/opt/unbound/sbin/unbound -d -c /opt/unbound/etc/unbound/unbound.conf
+
+tail -f /opt/unbound/etc/unbound/unbound.log

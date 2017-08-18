@@ -70,7 +70,11 @@ RUN mkdir -p /var/log/unbound  \
 && chown _unbound:_unbound /var/log/unbound \
 && touch /var/log/unbound/unbound.log \
 && chown _unbound:_unbound /var/log/unbound/unbound.log
-
+                           
+RUN mkdir -p /opt/unbound/etc/unbound \
+&& touch /opt/unbound/etc/unbound/unbound.log \
+&& chown _unbound:_unbound /opt/unbound/etc/unbound/unbound.log \
+&& chmod 0644 /opt/unbound/etc/unbound/unbound.log
 
 COPY unbound.sh /
 RUN chmod +x /unbound.sh
