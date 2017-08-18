@@ -64,6 +64,14 @@ RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make' && \
     apt-get autoremove -y && apt-get clean && \
     rm -fr /tmp/* /var/tmp/* /var/lib/apt/lists/*
 
+
+#ADD log
+RUN mkdir -p /var/log/unbound  \
+&& chown _unbound:_unbound /var/log/unbound \
+&& touch /var/log/unbound/unbound.log \
+&& chown _unbound:_unbound /var/log/unbound/unbound.log
+
+
 COPY unbound.sh /
 RUN chmod +x /unbound.sh
 

@@ -33,8 +33,9 @@ server:
   do-daemonize: no
   username: "_unbound"
   log-queries: no
-  hide-version: yes
-  identity: "unbound-docker"
+  logfile: /var/log/unbound
+  hide-version: no
+  identity: "docker-unbound"
   harden-short-bufsize: yes
   harden-large-queries: yes
   harden-glue: yes
