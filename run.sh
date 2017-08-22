@@ -40,6 +40,9 @@ showAllUsedPort() {
 }
 
 createRemoteKeys() {
+
+    echo "delete keys..."
+    rm -rf *key *pem
     echo "create new keys..."
     if "$(pwd)"/unbound-control-setup.sh -d ${SERVER_KEYS_DIR} >/tmp/${OUTPUT_UNBOND_CONTROL_SETUP}; then
         echo "Keys generated...OK"
@@ -61,14 +64,18 @@ checkKeysForRemoteControl() {
             echo "dir ${SERVER_KEYS_DIR} is empty, no files inside ..."
             createRemoteKeys
         else
-            nKeys="$(ls -l ${SERVER_KEYS_DIR}/*.key | grep -c *.key)"
+            echo "=> ${SERVER_KEYS_DIR}"
+            #nKeys="$(ls -l ${SERVER_KEYS_DIR}/*key | grep -c "${SERVER_KEYS_DIR}/*key")"
+            nKeys="$(ls -1 --file-type ${SERVER_KEYS_DIR} | grep key| grep -v '/$' | wc -l)"
+            echo "${nKeys}"
             if [ "${nKeys}" = "2" ]; then
                 echo "${nKeys}/2 key fond...OK"
             else
                 echo "${nKeys}/2 key fond...Not Ok"
                 createRemoteKeys
             fi
-            nPems="$(ls -l ${SERVER_KEYS_DIR}/*.pem | grep -c *.pem)"
+            #nPems="$(ls -l ${SERVER_KEYS_DIR}/*pem | grep -c "${SERVER_KEYS_DIR}/*pem")"
+            nPems="$(ls -1 --file-type ${SERVER_KEYS_DIR} | grep pem| grep -v '/$' | wc -l)"
             if [ "${nPems}" = "2" ]; then
                 echo "${nPems}/ 2 key fond...OK"
             else
