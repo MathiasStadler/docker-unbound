@@ -33,7 +33,7 @@
 
 
 # check DNS server
-- dig @<DNS Server IP>
+- dig @DNS Server IP
 - e.g. ```dig @192.168.178.32```
 - ![output](https://github.com/MathiasStadler/docker-unbound/blob/feature/add-unbound-control/doc/pictures/digAtLocalDnsServerIp.png?raw=true)
 
