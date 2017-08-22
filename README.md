@@ -4,17 +4,49 @@
 # Please visit for details  this project
 
 # ENV
-- HW M92P
-- LSB Version: core-9.20160110ubuntu0.2-amd64:core-9.20160110ubuntu0.2-noarch:printing-9.20160110ubuntu0.2-amd64:printing-9.20160110ubuntu0.2-noarch:security-9.20160110ubuntu0.2-amd64:security-9.20160110ubuntu0.2-noarch
-- Docker version 17.06.0-ce, build 02c1d87
+- HW Lenovo M92P
+- LSB Version: ```lsb_release  -i -d -r -c```
+    - Distributor ID: Ubuntu
+    - Description:    Ubuntu 16.04.3 LTS
+    - Release:        16.04
+    - Codename:       xenial
+
 - Fast internet
 
 # Usage 
-- ```git clone https://github.com/MathiasStadler/docker-unbound.git```
-- ```./run.sh```
+- git checkout
+    - ```git clone https://github.com/MathiasStadler/docker-unbound.git```
+- run unbound via docker
+    - ```./run.sh```
+- to force to build a new images
+    - ```./run.sh -n```
+
+# unbound-control (in a new shell same host)
+- docker exec -it $(cat unbound_container.id) /opt/unbound/sbin/unbound-control -h
+    - TODO enable remote access
+
+
 
 # Used own A or PTR record 
-- Please edit the a-record.conf in the root directory of the project
-- The edit of the a-record.conf in the "current" directory  has no effect (Placeholder) 
+    - Please edit the a-record.conf in the root directory of the project
+    - The edit of the a-record.conf in the "current" directory is the default file
+        - should have nothing record   
 
+# Monitoring DNS Queries with tcpdump
+
+   - ```tcpdump -vvv -s 0 -l -n port 53```
+   - from here ```https://jontai.me/blog/2011/11/monitoring-dns-queries-with-tcpdump/```
+
+
+# check DNS server
+- dig @DNS Server IP
+- e.g. ```dig @192.168.178.32```
+- ![output](https://github.com/MathiasStadler/docker-unbound/blob/feature/add-unbound-control/doc/pictures/digAtLocalDnsServerIp.png?raw=true)
+
+
+
+# Unsorted
+- ```apt-get install procps```
+- ```apt-get install dnsutils```
+- ```apt-get update && apt-get install -y procps dnsutils```
 

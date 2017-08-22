@@ -78,7 +78,7 @@ interface: 0.0.0.0@53
   # nameserver  names  and  addresses  only. The default may become outdated,
   # when servers change,  therefore  it is good practice to use a root-hints
   # file.  get one from ftp://FTP.INTERNIC.NET/domain/named.cache
-    root-hints: "/opt/unbound/etc/unbound/root.hints"
+    root-hints: "root.hints"
                  
   # enable to not answer id.server and hostname.bind queries.
     hide-identity: yes
@@ -288,6 +288,19 @@ include: /opt/unbound/etc/unbound/a-records.conf
       forward-addr: 216.146.35.35  # Dyn Public
       forward-addr: 216.146.36.36  # Dyn Public
 
+
+
+remote-control:
+        control-enable: yes
+        #control-interface: 0.0.0.0
+        control-interface: 127.0.0.1
+        #TODO check is IP6 working
+        #control-interface: ::1
+        control-port: 8953
+        server-key-file: "/opt/unbound/etc/unbound/unbound_server.key"
+        server-cert-file: "/opt/unbound/etc/unbound/unbound_server.pem"
+        control-key-file: "/opt/unbound/etc/unbound/unbound_control.key"
+        control-cert-file: "/opt/unbound/etc/unbound/unbound_control.pem"
 #
 #
 ## Authoritative, validating, recursive caching DNS
@@ -305,7 +318,15 @@ mkdir -p -m 700 /opt/unbound/etc/unbound/var &&
 
 #old exec /opt/unbound/sbin/unbound -d -c /opt/unbound/etc/unbound/unbound.conf
 
+
+if /opt/unbound/sbin/unbound-checkconf /opt/unbound/etc/unbound/unbound.conf | grep -q  "unbound-checkconf: no errors in" ; then
+/opt/unbound/sbin/unbound-checkconf /opt/unbound/etc/unbound/unbound.conf
 /opt/unbound/sbin/unbound -d -c /opt/unbound/etc/unbound/unbound.conf &
+else
+echo "Error in unbound config"
+/opt/unbound/sbin/unbound-checkconf /opt/unbound/etc/unbound/unbound.conf
+fi
+
 
 echo "start tail -f "
 
