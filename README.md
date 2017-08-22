@@ -4,7 +4,7 @@
 # Please visit for details  this project
 
 # ENV
-- HW M92P
+- HW Lenovo M92P
 - LSB Version: ```lsb_release  -i -d -r -c```
     - Distributor ID: Ubuntu
     - Description:    Ubuntu 16.04.3 LTS
