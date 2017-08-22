@@ -73,13 +73,11 @@ RUN mkdir -p /opt/unbound/etc/unbound \
 COPY unbound.sh /
 RUN chmod +x /unbound.sh
 
-
 #PLACEHOLDER during the build
 #COPY a-records.conf /opt/unbound/etc/unbound/
 RUN touch /opt/unbound/etc/unbound/a-records.conf \
 && chown _unbound:_unbound /opt/unbound/etc/unbound/a-records.conf
 
 EXPOSE 53/udp
-#for unbound-remote-control
-EXPOSE 8953/tcp 
+ 
 CMD ["/unbound.sh"]
