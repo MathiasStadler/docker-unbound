@@ -288,6 +288,19 @@ include: /opt/unbound/etc/unbound/a-records.conf
       forward-addr: 216.146.35.35  # Dyn Public
       forward-addr: 216.146.36.36  # Dyn Public
 
+
+
+remote-control:
+        control-enable: yes
+        control-interface: 0.0.0.0
+        #control-interface: 127.0.0.1
+        #TODO check is IP6 working
+        #control-interface: ::1
+        control-port: 8953
+        server-key-file: "/opt/unbound/etc/unbound/unbound_server.key"
+        server-cert-file: "/opt/unbound/etc/unbound/unbound_server.pem"
+        control-key-file: "/opt/unbound/etc/unbound/unbound_control.key"
+        control-cert-file: "/opt/unbound/etc/unbound/unbound_control.pem"
 #
 #
 ## Authoritative, validating, recursive caching DNS

@@ -80,4 +80,6 @@ RUN touch /opt/unbound/etc/unbound/a-records.conf \
 && chown _unbound:_unbound /opt/unbound/etc/unbound/a-records.conf
 
 EXPOSE 53/udp
+#for unbound-remote-control
+EXPOSE 8953/tcp 
 CMD ["/unbound.sh"]

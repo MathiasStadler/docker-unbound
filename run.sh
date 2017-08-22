@@ -122,6 +122,10 @@ runContainer() {
         -p 53:53/udp \
         -v "$(pwd)"/a-records.conf:/opt/unbound/etc/unbound/a-records.conf:ro \
         -v "$(pwd)"/root.hints:/opt/unbound/etc/unbound/root.hints:ro \
+        -v "$(pwd)"/unbound_control_keys/unbound_server.key:/opt/unbound/etc/unbound/unbound_server.key:ro \
+        -v "$(pwd)"/unbound_control_keys/unbound_server.pem:/opt/unbound/etc/unbound/unbound_server.pem:ro \
+        -v "$(pwd)"/unbound_control_keys/unbound_control.key:/opt/unbound/etc/unbound/unbound_control.key:ro \
+        -v "$(pwd)"/unbound_control_keys/unbound_control.pem:/opt/unbound/etc/unbound/unbound_control.pem:ro \
         "${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME}")
 
     #give docker few seconds
