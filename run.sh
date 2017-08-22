@@ -121,7 +121,7 @@ runContainer() {
     CID=$(docker run --name "${CONTAINER_NAME}" -d \
         -p 53:53/udp \
         -v "$(pwd)"/a-records.conf:/opt/unbound/etc/unbound/a-records.conf:ro \
-        -v "$(pwd)"/root-hints:/opt/unbound/etc/unbound/root.hints:ro \
+        -v "$(pwd)"/root.hints:/opt/unbound/etc/unbound/root.hints:ro \
         "${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME}")
 
     #give docker few seconds

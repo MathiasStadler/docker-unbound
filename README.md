@@ -23,6 +23,16 @@
 
 # Used own A or PTR record 
     - Please edit the a-record.conf in the root directory of the project
-    - The edit of the a-record.conf in the "current" directory  has no effect (Placeholder) 
+    - The edit of the a-record.conf in the "current" directory is the default file
+        - should have nothing record   
+
+# Monitoring DNS Queries with tcpdump
+
+   - ```tcpdump -vvv -s 0 -l -n port 53```
+   - from here ```https://jontai.me/blog/2011/11/monitoring-dns-queries-with-tcpdump/```
 
 
+# Unsorted
+- ```apt-get install procps```
+- ```apt-get install dnsutils```
+- ```apt-get update && apt-get install -y procps dnsutils```
