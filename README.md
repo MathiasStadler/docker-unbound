@@ -5,8 +5,12 @@
 
 # ENV
 - HW M92P
-- LSB Version: core-9.20160110ubuntu0.2-amd64:core-9.20160110ubuntu0.2-noarch:printing-9.20160110ubuntu0.2-amd64:printing-9.20160110ubuntu0.2-noarch:security-9.20160110ubuntu0.2-amd64:security-9.20160110ubuntu0.2-noarch
-- Docker version 17.06.0-ce, build 02c1d87
+- LSB Version: ```lsb_release  -i -d -r -c```
+    - Distributor ID: Ubuntu
+    - Description:    Ubuntu 16.04.3 LTS
+    - Release:        16.04
+    - Codename:       xenial
+
 - Fast internet
 
 # Usage 
