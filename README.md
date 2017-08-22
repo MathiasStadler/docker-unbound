@@ -21,6 +21,12 @@
 - to force to build a new images
     - ```./run.sh -n```
 
+# unbound-control (in a new shell same host)
+- docker exec -it $(cat unbound_container.id) /opt/unbound/sbin/unbound-control -h
+
+
+
+
 # Used own A or PTR record 
     - Please edit the a-record.conf in the root directory of the project
     - The edit of the a-record.conf in the "current" directory is the default file

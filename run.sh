@@ -128,6 +128,9 @@ runContainer() {
         -v "$(pwd)"/unbound_control_keys/unbound_control.pem:/opt/unbound/etc/unbound/unbound_control.pem:ro \
         "${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME}")
 
+    #only for convenience see README.md 
+    echo ${CID} >unbound_container.id
+
     #give docker few seconds
     sleep 2
 
