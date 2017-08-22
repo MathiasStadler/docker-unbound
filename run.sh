@@ -13,6 +13,8 @@ OWNER_NAME=${GIT_OWNER_NAME:-$BASH_OWNER_NAME}
 CONTAINER_NAME=${CONTAINER_NAME:-c-docker-unbound}
 IMAGES_NAME=${IMAGES_NAME:-i-docker-unbound}
 TAG_NAME=${TAG_NAME:-latest}
+SERVER_KEYS_DIR=unbound_control_keys
+OUTPUT_UNBOND_CONTROL_SETUP=output_unbound-control-setup.txt
 
 #getopt
 while getopts ":n" opt; do
@@ -37,11 +39,56 @@ showAllUsedPort() {
     sudo docker ps | awk -F" {2,}" 'END {print $6}'
 }
 
+createRemoteKeys() {
+    echo "create new keys..."
+    if "$(pwd)"/unbound-control-setup.sh -d ${SERVER_KEYS_DIR} >/tmp/${OUTPUT_UNBOND_CONTROL_SETUP}; then
+        echo "Keys generated...OK"
+        rm -rf /tmp/${OUTPUT_UNBOND_CONTROL_SETUP}
+    else
+        echo "ERROR during execution"
+        echo "Please see output file !!!...Not OK"
+        cat /tmp/${OUTPUT_UNBOND_CONTROL_SETUP}
+        exit 1
+    fi
+}
+
+checkKeysForRemoteControl() {
+    if ls -l | grep -q ${SERVER_KEYS_DIR}; then
+        echo "Directory ${SERVER_KEYS_DIR} availble"
+        #any files inside directory
+        nItems="$(ls -1 --file-type ${SERVER_KEYS_DIR} | grep -v '/$' | wc -l)"
+        if [ "${nItems}" = "0" ]; then
+            echo "dir ${SERVER_KEYS_DIR} is empty, no files inside ..."
+            createRemoteKeys
+        else
+            nKeys="$(ls -l ${SERVER_KEYS_DIR}/*.key | grep -c *.key)"
+            if [ "${nKeys}" = "2" ]; then
+                echo "${nKeys}/2 key fond...OK"
+            else
+                echo "${nKeys}/2 key fond...Not Ok"
+                createRemoteKeys
+            fi
+            nPems="$(ls -l ${SERVER_KEYS_DIR}/*.pem | grep -c *.pem)"
+            if [ "${nPems}" = "2" ]; then
+                echo "${nPems}/ 2 key fond...OK"
+            else
+                echo "${nPems}/ 2 key fond...Not OK"
+                createRemoteKeys
+            fi
+        fi
+    else
+        echo "Directory ${SERVER_KEYS_DIR} NOT availble, create new one..."
+        mkdir -p ${SERVER_KEYS_DIR}
+        touch .gitkeep
+        createRemoteKeys
+    fi
+}
+
 checkRunningContainerAndStop() {
     if docker ps | grep -q "${OWNER_NAME}/${IMAGES_NAME}"; then
         #TODO What is if we found more than container ?
         echo "$(docker ps | grep -c "${OWNER_NAME}/${IMAGES_NAME}") running Container found ... $(docker ps | grep "${OWNER_NAME}/${IMAGES_NAME}" | awk '{print $1}')"
-        read -r -p "Would you like stop this container now ? [y/N]" response
+        read -r -p "Would you like stop this container now ? Think on your Production  [y/N]" response
         case "$response" in [yY][eE][sS] | [yY])
             echo "stopping container now ..."
             docker ps | grep "${OWNER_NAME}/${IMAGES_NAME}" | awk '{print $1}' | xargs --no-run-if-empty docker stop >/dev/null
@@ -67,7 +114,7 @@ checkImagesAndBuildNewIfNecessary() {
             echo "Delete current images  ${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME}"
             docker rmi "${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME}"
         else
-            "Images ${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME} no found...OK"
+            echo "Images ${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME} no found...OK"
             echo "Nothing to do !...OK"
         fi
     fi
@@ -128,7 +175,7 @@ runContainer() {
         -v "$(pwd)"/unbound_control_keys/unbound_control.pem:/opt/unbound/etc/unbound/unbound_control.pem:ro \
         "${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME}")
 
-    #only for convenience see README.md 
+    #only for convenience see README.md
     echo ${CID} >unbound_container.id
 
     #give docker few seconds
@@ -165,6 +212,7 @@ terminated() {
 
 run() {
     echo "... run "
+    checkKeysForRemoteControl
     checkRunningContainerAndStop
     delteOldContainer
     checkImagesAndBuildNewIfNecessary

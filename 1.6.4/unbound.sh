@@ -34,7 +34,7 @@ directory: "/opt/unbound/etc/unbound"
 auto-trust-anchor-file: "var/root.key"
 
   # log verbosity
-    verbosity: 5
+    verbosity: 2
 
   # specify the interfaces to answer queries from by ip-address.  The default
   # is to listen to localhost (127.0.0.1 and ::1).  specify 0.0.0.0 and ::0 to
@@ -292,8 +292,8 @@ include: /opt/unbound/etc/unbound/a-records.conf
 
 remote-control:
         control-enable: yes
-        control-interface: 0.0.0.0
-        #control-interface: 127.0.0.1
+        #control-interface: 0.0.0.0
+        control-interface: 127.0.0.1
         #TODO check is IP6 working
         #control-interface: ::1
         control-port: 8953
