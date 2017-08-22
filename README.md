@@ -28,7 +28,7 @@
 
 
 # Used own A or PTR record 
-    - Please edit the a-record.conf in the root directory of the project
+- Please edit the a-record.conf in the root directory of the project
     - The edit of the a-record.conf in the "current" directory is the default file
         - should have nothing record   
 
