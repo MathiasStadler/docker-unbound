@@ -64,13 +64,7 @@ RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make' && \
     apt-get autoremove -y && apt-get clean && \
     rm -fr /tmp/* /var/tmp/* /var/lib/apt/lists/*
 
-
-#ADD log
-RUN mkdir -p /var/log/unbound  \
-&& chown _unbound:_unbound /var/log/unbound \
-&& touch /var/log/unbound/unbound.log \
-&& chown _unbound:_unbound /var/log/unbound/unbound.log
-                           
+# for log                           
 RUN mkdir -p /opt/unbound/etc/unbound \
 && touch /opt/unbound/etc/unbound/unbound.log \
 && chown _unbound:_unbound /opt/unbound/etc/unbound/unbound.log \
@@ -79,7 +73,11 @@ RUN mkdir -p /opt/unbound/etc/unbound \
 COPY unbound.sh /
 RUN chmod +x /unbound.sh
 
-COPY a-records.conf /opt/unbound/etc/unbound/
+
+#PLACEHOLDER during the build
+#COPY a-records.conf /opt/unbound/etc/unbound/
+RUN touch /opt/unbound/etc/unbound/a-records.conf \
+&& chown _unbound:_unbound /opt/unbound/etc/unbound/a-records.conf
 
 EXPOSE 53/udp
 CMD ["/unbound.sh"]
