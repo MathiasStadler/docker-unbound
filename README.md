@@ -14,11 +14,15 @@
 - Fast internet
 
 # Usage 
-- ```git clone https://github.com/MathiasStadler/docker-unbound.git```
-- ```./run.sh```
+- git checkout
+    - ```git clone https://github.com/MathiasStadler/docker-unbound.git```
+- run unbound via docker
+    - ```./run.sh```
+- to force to build a new images
+    - ```./run.sh -n```
 
 # Used own A or PTR record 
-- Please edit the a-record.conf in the root directory of the project
-- The edit of the a-record.conf in the "current" directory  has no effect (Placeholder) 
+    - Please edit the a-record.conf in the root directory of the project
+    - The edit of the a-record.conf in the "current" directory  has no effect (Placeholder) 
 
 
