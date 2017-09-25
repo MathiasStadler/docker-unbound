@@ -242,11 +242,11 @@ so-rcvbuf: 425984
   # "home.lan". Here we can tell Unbound to connect to the NSD server when it
   # needs to resolve a *.home.lan hostname or IP.
   #
-  # private-domain: "home.lan"
-  # local-zone: "0.0.10.in-addr.arpa." nodefault
+  # private-domain: "fritz.box"
+  # local-zone: "178.168.192.in-addr.arpa." nodefault
   # stub-zone:
-  #      name: "home.lan"
-  #      stub-addr: 10.0.0.111@53
+  #      name: "fritz.box"
+  #      stub-addr: 192.168.178.1@53
 
   # If you have an internal or private DNS names the external DNS servers can
   # not resolve, then you can assign domain name strings to be redirected to a
@@ -258,8 +258,8 @@ so-rcvbuf: 425984
   # instead of the public dns servers.
   #
   # forward-zone:
-  #    name: "organization.com"
-  #    forward-addr: 1.1.1.1        # Internal or private DNS
+  #    name: "fritz.box"
+  #    forward-addr: 192.168.178.1        # Internal or private DNS
 
   # Use the following forward-zone to forward all queries to Google DNS,
   # OpenDNS.com or your local ISP's dns servers for example. To test resolution
@@ -267,7 +267,7 @@ so-rcvbuf: 425984
   # milliseconds.
   #
 
-include: /opt/unbound/etc/unbound/a-records.conf
+ include: /opt/unbound/etc/unbound/a-records.conf
 
    forward-zone:
       name: "."
