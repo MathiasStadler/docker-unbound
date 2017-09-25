@@ -114,3 +114,7 @@ forward-addr: 192.168.178.1
 
 # local-data  PTR 
 https://www.unbound.net/documentation/unbound.conf.html
+
+
+# Execute command from a container to another container?
+- https://forums.docker.com/t/execute-command-from-a-container-to-another-container/19492
