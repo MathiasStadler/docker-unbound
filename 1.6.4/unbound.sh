@@ -42,8 +42,8 @@ auto-trust-anchor-file: "var/root.key"
   # 'interface:' labeled line.  The listen interfaces are not changed on
   # reload, only on restart.
   # interface: 127.0.0.1
-  #interface: 0.0.0.0@53
-interface: 0.0.0.0@15353
+  interface: 0.0.0.0
+    #interface: 0.0.0.0#15353
 
   # port to answer queries from
     port: 15353

@@ -78,6 +78,9 @@ RUN chmod +x /unbound.sh
 RUN touch /opt/unbound/etc/unbound/a-records.conf \
 && chown _unbound:_unbound /opt/unbound/etc/unbound/a-records.conf
 
-EXPOSE 53/udp
- 
+#EXPOSE 53/udp
+#EXPOSE 53/udp 
+#EXPOSE 53/tcp 
+#EXPOSE 15353/udp 
+#EXPOSE 15353/tcp 
 CMD ["/unbound.sh"]
