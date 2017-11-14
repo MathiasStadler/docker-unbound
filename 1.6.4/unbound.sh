@@ -46,7 +46,7 @@ interface: 0.0.0.0@53
 
 
   # port to answer queries from
-    port: 53
+    port: 5353
 
   # Enable IPv4, "yes" or "no".
     do-ip4: yes

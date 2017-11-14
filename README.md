@@ -45,10 +45,54 @@
 
 
 
-#check request from a-records.conf
-- ``` dig docker-proxy.home.lan 192.168.178.32```
+# check request from a-records.conf
+- ```dig @192.168.178.32 docker-proxy.fritz.box```
 - short answer
-- ```dig +short docker-proxy.home.lan 192.168.178.32```
+- ```dig +short @192.168.178.32 docker-proxy.fritz.box```
+
+
+
+# unbound-control
+- run ./bash_container.sh connect container
+- ```./bash_container.sh```
+- change in command directory
+- ``` cd /opt/unbound/sbin``
+- run unbound-control
+- ``` ./unbound-control```
+
+- unbound status
+- ```./unbound-control status```
+
+- unbound local zone
+- ```./unbound-control list_local_zones```
+
+- set a dynamic ip address
+- ```./unbound-control local_data "docker1-proxy.fritz.box A 192.168.178.44"```
+
+
+# set transperent unbound mode of local desktop/server
+- check dnsmasq is not active
+- ``` ps -ef|grep dnsmasq```
+- deactivate that to commend in the file
+- ```cat /etc/NetworkManager/NetworkManager.conf```
+- ths line like so
+-```#dns=dnsmasq```  
+- and restart the network-manager
+- ```service network-manager restart```
+
+
+- run set-iptables-transperent-unbound
+- ```./set-iptables-transperent-unbound.sh```
+- control set the rules aktive
+- ```iptables -t nat -L```
+
+
+# ipdatbles
+- ```iptable -t nat -L```
+
+
+# install ps inside the container
+# ``` sudo apt-get && sudo apt-get install procps```
 
 
 
