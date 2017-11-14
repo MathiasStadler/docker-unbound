@@ -41,12 +41,12 @@ auto-trust-anchor-file: "var/root.key"
   # bind to all available interfaces.  specify every interface[@port] on a new
   # 'interface:' labeled line.  The listen interfaces are not changed on
   # reload, only on restart.
- #   interface: 127.0.0.1
-interface: 0.0.0.0@53
-
+  # interface: 127.0.0.1
+  #interface: 0.0.0.0@53
+interface: 0.0.0.0@15353
 
   # port to answer queries from
-    port: 5353
+    port: 15353
 
   # Enable IPv4, "yes" or "no".
     do-ip4: yes

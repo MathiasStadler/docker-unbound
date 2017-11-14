@@ -90,6 +90,8 @@
 # ipdatbles
 - ```iptable -t nat -L```
 
+# netstat for check is the server listen on port XX
+```sudo netstat -anp|grep 53```
 
 # install ps inside the container
 # ``` sudo apt-get && sudo apt-get install procps```
