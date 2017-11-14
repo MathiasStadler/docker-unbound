@@ -45,6 +45,13 @@
 
 
 
+#check request from a-records.conf
+- ``` dig docker-proxy.home.lan 192.168.178.32```
+- short answer
+- ```dig +short docker-proxy.home.lan 192.168.178.32```
+
+
+
 # Unsorted
 - ```apt-get install procps```
 - ```apt-get install dnsutils```

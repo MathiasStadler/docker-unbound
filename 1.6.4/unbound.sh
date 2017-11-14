@@ -322,12 +322,9 @@ mkdir -p -m 700 /opt/unbound/etc/unbound/var &&
 if /opt/unbound/sbin/unbound-checkconf /opt/unbound/etc/unbound/unbound.conf | grep -q  "unbound-checkconf: no errors in" ; then
 /opt/unbound/sbin/unbound-checkconf /opt/unbound/etc/unbound/unbound.conf
 /opt/unbound/sbin/unbound -d -c /opt/unbound/etc/unbound/unbound.conf &
+echo "start tail -f "
+tail -f /opt/unbound/etc/unbound/unbound.log
 else
 echo "Error in unbound config"
 /opt/unbound/sbin/unbound-checkconf /opt/unbound/etc/unbound/unbound.conf
 fi
-
-
-echo "start tail -f "
-
-tail -f /opt/unbound/etc/unbound/unbound.log
