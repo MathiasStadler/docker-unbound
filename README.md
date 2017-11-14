@@ -96,6 +96,9 @@
 # install ps inside the container
 # ``` sudo apt-get && sudo apt-get install procps```
 
+# psgrep 
+- ```ps -ef|grep /opt/unbound/sbin/unbound |grep -v grep |awk '{print $2}' ```
+
 
 
 # Unsorted
@@ -171,3 +174,6 @@ https://www.unbound.net/documentation/unbound.conf.html
 
 # Execute command from a container to another container?
 - https://forums.docker.com/t/execute-command-from-a-container-to-another-container/19492
+
+
+# TODO container muss run under technical user _unbound

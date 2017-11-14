@@ -173,7 +173,9 @@ runContainer() {
     echo "Used ${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME} to start new ${CONTAINER_NAME} container"
     #start container
     CID=$(docker run --name "${CONTAINER_NAME}" -d \
+        --user _unbound:_unbound \
         -p 15353:15353/udp \
+        -p 15353:15353/tcp \
         -v "$(pwd)"/a-records.conf:/opt/unbound/etc/unbound/a-records.conf:ro \
         -v "$(pwd)"/root.hints:/opt/unbound/etc/unbound/root.hints:ro \
         -v "$(pwd)"/unbound_control_keys/unbound_server.key:/opt/unbound/etc/unbound/unbound_server.key:ro \
