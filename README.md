@@ -10,17 +10,17 @@
 
 #tl;dr
 - without Exposed ports
-- found the ip for the docker container
+- found automatic the ip for the docker container iptables rules
 - set 
     - iptables -t nat -A OUTPUT -p udp --dport $DNS_PORT -j DNAT --to $DEST_IP:$DNS_PROXY_PORT;
     - iptables -t nat -A POSTROUTING -j MASQUERADE
 - catch transparent all DNS request on PORT 53 host/ virtualbox(vagrant)/ docker
-- delete forwarding rule during  the container stopping 
+- delete forwarding rule during the container stopping 
 
-# docker-unbound
-- copy of https://github.com/MatthewVance/unbound-docker.git 
+# idea
+- [based of](https://github.com/MatthewVance/unbound-docker.git)
 
-# Please visit for details  this project
+- Please visit for details  this project
 
 # ENV
 - HW Lenovo M92P
@@ -29,16 +29,11 @@
     - Description:    Ubuntu 16.04.3 LTS
     - Release:        16.04
     - Codename:       xenial
-
 - Fast internet
-
-
 
 # unbound-control (in a new shell same host)
 - docker exec -it $(cat unbound_container.id) /opt/unbound/sbin/unbound-control -h
-    - TODO enable remote access
-
-
+    
 
 # Used own A or PTR record 
 - Please edit the a-record.conf in the root directory of the project
