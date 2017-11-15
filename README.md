@@ -8,7 +8,7 @@
 
 
 
-#tl;dr
+# tl;dr
 - without Exposed ports
 - found automatic the ip for the docker container iptables rules
 - set 
