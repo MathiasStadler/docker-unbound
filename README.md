@@ -64,7 +64,7 @@
 - run ./bash_container.sh connect container
 - ```./bash_container.sh```
 - change in command directory
-- ``` cd /opt/unbound/sbin``
+- ```cd /opt/unbound/sbin```
 - run unbound-control
 - ``` ./unbound-control```
 
