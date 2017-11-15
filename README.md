@@ -1,8 +1,21 @@
+# Usage 
+- git checkout
+    - ```git clone https://github.com/MathiasStadler/docker-unbound.git```
+- run unbound via docker
+    - ```./run.sh```
+- to force to build a new images
+    - ```./run.sh -n```
+
+
 
 #tl;dr
 - without Exposed ports
-
-
+- found the ip for the docker container
+- set 
+    - iptables -t nat -A OUTPUT -p udp --dport $DNS_PORT -j DNAT --to $DEST_IP:$DNS_PROXY_PORT;
+    - iptables -t nat -A POSTROUTING -j MASQUERADE
+- catch transparent all DNS request on PORT 53 host/ virtualbox(vagrant)/ docker
+- delete forwarding rule during  the container stopping 
 
 # docker-unbound
 - copy of https://github.com/MatthewVance/unbound-docker.git 
@@ -19,13 +32,7 @@
 
 - Fast internet
 
-# Usage 
-- git checkout
-    - ```git clone https://github.com/MathiasStadler/docker-unbound.git```
-- run unbound via docker
-    - ```./run.sh```
-- to force to build a new images
-    - ```./run.sh -n```
+
 
 # unbound-control (in a new shell same host)
 - docker exec -it $(cat unbound_container.id) /opt/unbound/sbin/unbound-control -h
