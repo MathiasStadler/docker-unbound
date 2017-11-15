@@ -188,4 +188,12 @@ https://www.unbound.net/documentation/unbound.conf.html
 - https://forums.docker.com/t/execute-command-from-a-container-to-another-container/19492
 
 
-# TODO container muss run under technical user _unbound
+#clean docker iamges
+docker rmi mathiasstadler/i-docker-unbound:latest
+
+# docker remove all stopped containers
+- ```docker container prune```
+
+# docker delete 
+- [frome here] (https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images) 
+-```docker rmi $(docker images --filter "dangling=true" -q --no-trunc)```
