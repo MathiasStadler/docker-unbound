@@ -27,7 +27,9 @@ sed \
 server:
 
 username: "_unbound"
-log-queries: no
+# enable log-quries 
+# log-queries: no
+log-queries: yes
 logfile: /opt/unbound/etc/unbound/unbound.log
 chroot: "/opt/unbound/etc/unbound"
 directory: "/opt/unbound/etc/unbound"
@@ -41,9 +43,9 @@ auto-trust-anchor-file: "var/root.key"
   # bind to all available interfaces.  specify every interface[@port] on a new
   # 'interface:' labeled line.  The listen interfaces are not changed on
   # reload, only on restart.
- #   interface: 127.0.0.1
-interface: 0.0.0.0@53
-
+  # interface: 127.0.0.1
+  interface: 0.0.0.0
+    #interface: 0.0.0.0#53
 
   # port to answer queries from
     port: 53
@@ -71,6 +73,8 @@ interface: 0.0.0.0@53
     access-control: 10.0.0.0/16 allow
     access-control: 127.0.0.0/8 allow
     access-control: 192.168.0.0/16 allow
+  # add docker default network
+    access-control: 172.17.0.0/16 allow
     access-control: 192.168.178.0/24 allow
 
   # Read  the  root  hints from this file. Default is nothing, using built in
@@ -242,11 +246,11 @@ so-rcvbuf: 425984
   # "home.lan". Here we can tell Unbound to connect to the NSD server when it
   # needs to resolve a *.home.lan hostname or IP.
   #
-  # private-domain: "home.lan"
-  # local-zone: "0.0.10.in-addr.arpa." nodefault
+  # private-domain: "fritz.box"
+  # local-zone: "178.168.192.in-addr.arpa." nodefault
   # stub-zone:
-  #      name: "home.lan"
-  #      stub-addr: 10.0.0.111@53
+  #      name: "fritz.box"
+  #      stub-addr: 192.168.178.1@53
 
   # If you have an internal or private DNS names the external DNS servers can
   # not resolve, then you can assign domain name strings to be redirected to a
@@ -258,8 +262,8 @@ so-rcvbuf: 425984
   # instead of the public dns servers.
   #
   # forward-zone:
-  #    name: "organization.com"
-  #    forward-addr: 1.1.1.1        # Internal or private DNS
+  #    name: "fritz.box"
+  #    forward-addr: 192.168.178.1        # Internal or private DNS
 
   # Use the following forward-zone to forward all queries to Google DNS,
   # OpenDNS.com or your local ISP's dns servers for example. To test resolution
@@ -267,7 +271,7 @@ so-rcvbuf: 425984
   # milliseconds.
   #
 
-include: /opt/unbound/etc/unbound/a-records.conf
+ include: /opt/unbound/etc/unbound/a-records.conf
 
    forward-zone:
       name: "."
@@ -322,12 +326,9 @@ mkdir -p -m 700 /opt/unbound/etc/unbound/var &&
 if /opt/unbound/sbin/unbound-checkconf /opt/unbound/etc/unbound/unbound.conf | grep -q  "unbound-checkconf: no errors in" ; then
 /opt/unbound/sbin/unbound-checkconf /opt/unbound/etc/unbound/unbound.conf
 /opt/unbound/sbin/unbound -d -c /opt/unbound/etc/unbound/unbound.conf &
+echo "start tail -f "
+tail -f /opt/unbound/etc/unbound/unbound.log
 else
 echo "Error in unbound config"
 /opt/unbound/sbin/unbound-checkconf /opt/unbound/etc/unbound/unbound.conf
 fi
-
-
-echo "start tail -f "
-
-tail -f /opt/unbound/etc/unbound/unbound.log
