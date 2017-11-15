@@ -44,19 +44,24 @@ start_routing () {
   # Add a new route table that routes everything marked through the new container
   # workaround boot2docker issue #367
   # https://github.com/boot2docker/boot2docker/issues/367
-  [ -d /etc/iproute2 ] || sudo mkdir -p /etc/iproute2
-  if [ ! -e /etc/iproute2/rt_tables ]; then
-    if [ -f /usr/local/etc/rt_tables ]; then
-      sudo ln -s /usr/local/etc/rt_tables /etc/iproute2/rt_tables
-    elif [ -f /usr/local/etc/iproute2/rt_tables ]; then
-      sudo ln -s /usr/local/etc/iproute2/rt_tables /etc/iproute2/rt_tables
-    fi
-  fi
-  ([ -e /etc/iproute2/rt_tables ] && grep -q $ROUTINGTABLE /etc/iproute2/rt_tables) \
-    || sudo sh -c "echo '1	$ROUTINGTABLE' >> /etc/iproute2/rt_tables"
-  ip rule show | grep -q $ROUTINGTABLE \
-    || sudo ip rule add from all fwmark 0x1 lookup $ROUTINGTABLE
-  sudo ip route add default via "${IPADDR}" dev docker0 table $ROUTINGTABLE
+  
+  
+  # SAVE start
+  #[ -d /etc/iproute2 ] || sudo mkdir -p /etc/iproute2
+  #if [ ! -e /etc/iproute2/rt_tables ]; then
+  #  if [ -f /usr/local/etc/rt_tables ]; then
+  #    sudo ln -s /usr/local/etc/rt_tables /etc/iproute2/rt_tables
+  #  elif [ -f /usr/local/etc/iproute2/rt_tables ]; then
+  #    sudo ln -s /usr/local/etc/iproute2/rt_tables /etc/iproute2/rt_tables
+  #  fi
+  #fi
+  #([ -e /etc/iproute2/rt_tables ] && grep -q $ROUTINGTABLE /etc/iproute2/rt_tables) \
+  #  || sudo sh -c "echo '1	$ROUTINGTABLE' >> /etc/iproute2/rt_tables"
+  #ip rule show | grep -q $ROUTINGTABLE \
+  #  || sudo ip rule add from all fwmark 0x1 lookup $ROUTINGTABLE
+  #sudo ip route add default via "${IPADDR}" dev docker0 table $ROUTINGTABLE
+  
+  # SAVE end
   # Mark packets to port 80 and 443 external, so they route through the new
   # route table
   
