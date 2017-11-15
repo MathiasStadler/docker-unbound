@@ -9,11 +9,11 @@
 
 
 DNS_PORT=53
-DNS_PROXY_PORT=15353
+DNS_PROXY_PORT=53
 UNBOUND_UID=1000
 INTERNET_DEVICE=eno1
-DEST_IP=192.168.178.32
-
+#DEST_IP=192.168.178.32
+DEST_IP=172.17.0.2
 UNBOUND_PID=$(ps -ef|grep /opt/unbound/sbin/unbound |grep -v grep |awk '{print $2}');
 
 echo $UNBOUND_PID;
@@ -33,6 +33,6 @@ echo $UNBOUND_PID;
 #iptables -t nat -A POSTROUTING -j MASQUERADE
 
 
-iptables -t nat -A OUTPUT -m owner ! --pid-owner $UNBOUND_PID -p tcp --dport $DNS_PORT -j DNAT --to $DEST_IP:$DNS_PROXY_PORT;
-iptables -t nat -A OUTPUT -m owner ! --pid-owner $UNBOUND_PID -p udp --dport $DNS_PORT -j DNAT --to $DEST_IP:$DNS_PROXY_PORT;
+iptables -t nat -A OUTPUT -p tcp --dport $DNS_PORT -j DNAT --to $DEST_IP:$DNS_PROXY_PORT;
+iptables -t nat -A OUTPUT -p udp --dport $DNS_PORT -j DNAT --to $DEST_IP:$DNS_PROXY_PORT;
 iptables -t nat -A POSTROUTING -j MASQUERADE

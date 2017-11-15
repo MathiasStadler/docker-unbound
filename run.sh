@@ -15,6 +15,10 @@ IMAGES_NAME=${IMAGES_NAME:-i-docker-unbound}
 TAG_NAME=${TAG_NAME:-latest}
 SERVER_KEYS_DIR=unbound_control_keys
 OUTPUT_UNBOND_CONTROL_SETUP=output_unbound-control-setup.txt
+ROUTINGTABLE="TRANSDNS"
+
+DNS_PORT=53
+DNS_PROXY_PORT=53
 
 #getopt
 while getopts ":n" opt; do
@@ -32,6 +36,80 @@ done
 
 #exit on error
 set -e
+
+
+
+
+start_routing () {
+  # Add a new route table that routes everything marked through the new container
+  # workaround boot2docker issue #367
+  # https://github.com/boot2docker/boot2docker/issues/367
+  [ -d /etc/iproute2 ] || sudo mkdir -p /etc/iproute2
+  if [ ! -e /etc/iproute2/rt_tables ]; then
+    if [ -f /usr/local/etc/rt_tables ]; then
+      sudo ln -s /usr/local/etc/rt_tables /etc/iproute2/rt_tables
+    elif [ -f /usr/local/etc/iproute2/rt_tables ]; then
+      sudo ln -s /usr/local/etc/iproute2/rt_tables /etc/iproute2/rt_tables
+    fi
+  fi
+  ([ -e /etc/iproute2/rt_tables ] && grep -q $ROUTINGTABLE /etc/iproute2/rt_tables) \
+    || sudo sh -c "echo '1	$ROUTINGTABLE' >> /etc/iproute2/rt_tables"
+  ip rule show | grep -q $ROUTINGTABLE \
+    || sudo ip rule add from all fwmark 0x1 lookup $ROUTINGTABLE
+  sudo ip route add default via "${IPADDR}" dev docker0 table $ROUTINGTABLE
+  # Mark packets to port 80 and 443 external, so they route through the new
+  # route table
+  
+  #SAVE org 
+  #COMMON_RULES="-t mangle -I PREROUTING -p tcp -i docker0 ! -s ${IPADDR}
+  #  -j MARK --set-mark 1"
+  
+  COMMON_RULES="-t nat -A OUTPUT -p udp --dport ${DNS_PORT} -j DNAT --to ${IPADDR}:${DNS_PROXY_PORT}"
+  echo "Redirecting DNS to docker-"
+  sudo iptables $COMMON_RULES 
+   
+   #TODO OLD start
+   # if [ "$WITH_SSL" = 'yes' ]; then
+   #   echo "Redirecting DNS to $CONTAINER_NAME"
+   #   sudo iptables $COMMON_RULES --dport 443
+  # else
+  #    echo "Not redirecting HTTPS. To enable, re-run with the argument 'ssl'"
+  #    echo "CA certificate will be generated anyway, but it won't be used"
+  # fi
+  
+  # TODO OLD end
+  # Exemption rule to stop docker from masquerading traffic routed to the
+  # transparent proxy
+  sudo iptables -t nat -I POSTROUTING -o docker0 -s 172.17.0.0/16 -j ACCEPT
+}
+
+stop_routing () {
+    # Remove iptables rules.
+    set +e
+    ip route show table $ROUTINGTABLE | grep -q default \
+        && sudo ip route del default table $ROUTINGTABLE
+    while true; do
+        #SAVE org
+        #rule_num=$(sudo iptables -t mangle -L PREROUTING -n --line-numbers \
+        #    | grep -E 'MARK.*172\.17.*tcp \S+ MARK set 0x1' \
+        #    | awk '{print $1}' \
+        #    | head -n1)
+
+           rule_num=$(sudo iptables -t nat -L OUTPUT -n --line-numbers \
+            | grep -E "${IPADDR}:${DNS_PROXY_PORT}" \
+            | awk '{print $1}' \
+            | head -n1) 
+        [ -z "$rule_num" ] && break
+        #SAVE org
+        #sudo iptables -t mangle -D PREROUTING "$rule_num"
+        sudo iptables -t nat  -D OUTPUT "$rule_num"
+    done
+    sudo iptables -t nat -D POSTROUTING -o docker0 -s 172.17.0.0/16 -j ACCEPT 2>/dev/null
+    set -e
+}
+
+
+
 
 showAllUsedPort() {
     # from here
@@ -173,9 +251,6 @@ runContainer() {
     echo "Used ${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME} to start new ${CONTAINER_NAME} container"
     #start container
     CID=$(docker run --name "${CONTAINER_NAME}" -d \
-        --user _unbound:_unbound \
-        -p 15353:15353/udp \
-        -p 15353:15353/tcp \
         -v "$(pwd)"/a-records.conf:/opt/unbound/etc/unbound/a-records.conf:ro \
         -v "$(pwd)"/root.hints:/opt/unbound/etc/unbound/root.hints:ro \
         -v "$(pwd)"/unbound_control_keys/unbound_server.key:/opt/unbound/etc/unbound/unbound_server.key:ro \
@@ -183,6 +258,13 @@ runContainer() {
         -v "$(pwd)"/unbound_control_keys/unbound_control.key:/opt/unbound/etc/unbound/unbound_control.key:ro \
         -v "$(pwd)"/unbound_control_keys/unbound_control.pem:/opt/unbound/etc/unbound/unbound_control.pem:ro \
         "${OWNER_NAME}/${IMAGES_NAME}:${TAG_NAME}")
+
+IPADDR=$(sudo docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${CID})
+
+start_routing
+
+#-p 53:53/udp \
+#-p 53:53/tcp \
 
     #only for convenience see README.md
     echo ${CID} >unbound_container.id
@@ -202,6 +284,7 @@ stopContainer() {
     set +e
     sudo docker rm -fv "${CID}" >/dev/null 2>&1
     set -e
+    stop_routing
 
 }
 

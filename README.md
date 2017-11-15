@@ -1,3 +1,9 @@
+
+#tl;dr
+- without Exposed ports
+
+
+
 # docker-unbound
 - copy of https://github.com/MatthewVance/unbound-docker.git 
 
@@ -94,7 +100,11 @@
 ```sudo netstat -anp|grep 53```
 
 # install ps inside the container
-# ``` sudo apt-get && sudo apt-get install procps```
+- ```apt-get update &&  apt-get install procps```
+
+# install dig inside the container
+- ```apt-get install dnsutils```
+
 
 # psgrep 
 - ```ps -ef|grep /opt/unbound/sbin/unbound |grep -v grep |awk '{print $2}' ```

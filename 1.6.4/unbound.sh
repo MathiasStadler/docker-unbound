@@ -27,7 +27,9 @@ sed \
 server:
 
 username: "_unbound"
-log-queries: no
+# enable log-quries 
+# log-queries: no
+log-queries: yes
 logfile: /opt/unbound/etc/unbound/unbound.log
 chroot: "/opt/unbound/etc/unbound"
 directory: "/opt/unbound/etc/unbound"
@@ -43,10 +45,10 @@ auto-trust-anchor-file: "var/root.key"
   # reload, only on restart.
   # interface: 127.0.0.1
   interface: 0.0.0.0
-    #interface: 0.0.0.0#15353
+    #interface: 0.0.0.0#53
 
   # port to answer queries from
-    port: 15353
+    port: 53
 
   # Enable IPv4, "yes" or "no".
     do-ip4: yes
@@ -71,6 +73,8 @@ auto-trust-anchor-file: "var/root.key"
     access-control: 10.0.0.0/16 allow
     access-control: 127.0.0.0/8 allow
     access-control: 192.168.0.0/16 allow
+  # add docker default network
+    access-control: 172.17.0.0/16 allow
     access-control: 192.168.178.0/24 allow
 
   # Read  the  root  hints from this file. Default is nothing, using built in
