@@ -1,4 +1,5 @@
 #for security reason
+.vscode
 **/*key
 **/*pem
 **/*crt
